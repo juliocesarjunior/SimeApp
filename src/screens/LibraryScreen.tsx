@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TextInput, Button } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TextInput, Button, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { NavigationStackProp } from 'react-navigation-stack';
+
+const BASE_URL = 'http://10.86.46.56:3000'; // Definindo a base URL
 
 interface Library {
   id: number;
@@ -67,6 +69,10 @@ const LibraryScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
+  const handleLibraryPress = (fileUrl: string) => {
+    navigation.navigate('PdfViewer', { pdfUrl: fileUrl });
+  };
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -79,10 +85,10 @@ const LibraryScreen: React.FC<Props> = ({ navigation }) => {
         data={filteredLibraries}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.itemContainer}>
+          <TouchableOpacity style={styles.itemContainer} onPress={() => handleLibraryPress(`${BASE_URL}${item.file.url}`)}>
             <Text style={styles.name}>{item.name}</Text>
             <Text style={styles.description}>{item.description}</Text>
-          </View>
+          </TouchableOpacity>
         )}
       />
       <View style={styles.pagination}>

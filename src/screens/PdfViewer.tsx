@@ -1,29 +1,40 @@
 // PdfViewer.tsx
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import Pdf from 'react-native-pdf';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import Pdf from 'react-native-pdf'; // Importando o componente PDF
 
-interface PdfViewerProps {
-  route: {
-    params: {
-      pdfUrl: string; // URL do PDF passada como parâmetro
-    };
-  };
-}
+// Definindo os parâmetros da rota
+type PdfViewerRouteParams = {
+  pdfUrl: string; // Aqui você pode adicionar outros parâmetros se necessário
+};
 
-const PdfViewer: React.FC<PdfViewerProps> = ({ route }) => {
-  const { pdfUrl } = route.params;
+// Definindo os tipos das props
+type PdfViewerProps = {
+  route: RouteProp<{ params: PdfViewerRouteParams }, 'PdfViewer'>; // Use o tipo definido
+  navigation: StackNavigationProp<any>; // Você pode ser mais específico aqui
+};
+
+const PdfViewer: React.FC<PdfViewerProps> = ({ route, navigation }) => {
+  const { pdfUrl } = route.params; // Extraindo a URL do PDF
 
   return (
     <View style={styles.container}>
       <Pdf
-        source={{ uri: pdfUrl, cache: true }} // A URL do PDF
-        style={styles.pdf}
+        source={{ uri: pdfUrl, cache: true }} // Passando a URL do PDF
+        style={styles.pdf} // Estilos do PDF
         onLoadComplete={(numberOfPages, filePath) => {
-          console.log(`number of pages: ${numberOfPages}`);
+          console.log(`Número de páginas: ${numberOfPages}`);
+        }}
+        onPageChanged={(page, numberOfPages) => {
+          console.log(`Página: ${page} de ${numberOfPages}`);
         }}
         onError={(error) => {
-          console.error(error);
+          console.log(error);
+        }}
+        onPressLink={(uri) => {
+          console.log(`Link pressionado: ${uri}`);
         }}
       />
     </View>
@@ -33,6 +44,8 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   pdf: {
     flex: 1,

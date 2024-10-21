@@ -8,6 +8,7 @@ import SongScreen from './screens/SongScreen';
 import LibraryScreen from './screens/LibraryScreen';
 import CalendarScreen from './screens/CalendarScreen';
 import InfoScreen from './screens/InfoScreen';
+import PdfViewer from './screens/PdfViewer';
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,7 @@ const AppNavigator = () => {
         <Stack.Screen name="Library" component={LibraryScreen} />
         <Stack.Screen name="Calendar" component={CalendarScreen} />
         <Stack.Screen name="Info" component={InfoScreen} />
+        <Stack.Screen name="PdfViewer" component={PdfViewer} />
       </Stack.Navigator>
     </NavigationContainer>
   );
