@@ -5,41 +5,41 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Pdf from 'react-native-pdf'; // Importando o componente PDF
 
-// Definindo os parâmetros da rota
 type PdfViewerRouteParams = {
-  pdfUrl: string; // Aqui você pode adicionar outros parâmetros se necessário
+  pdfUrl: string;
 };
 
-// Definindo os tipos das props
 type PdfViewerProps = {
-  route: RouteProp<{ params: PdfViewerRouteParams }, 'PdfViewer'>; // Use o tipo definido
-  navigation: StackNavigationProp<any>; // Você pode ser mais específico aqui
+  route: RouteProp<{ params: PdfViewerRouteParams }, 'PdfViewer'>;
+  navigation: StackNavigationProp<any>;
 };
 
 const PdfViewer: React.FC<PdfViewerProps> = ({ route, navigation }) => {
-  const { pdfUrl } = route.params; // Extraindo a URL do PDF
-
+  const { pdfUrl } = route.params;
+  //console.log(pdfUrl)
   return (
     <View style={styles.container}>
       <Pdf
-        source={{ uri: pdfUrl, cache: true }} // Passando a URL do PDF
-        style={styles.pdf} // Estilos do PDF
+      trustAllCerts={false}
+        source={{ uri: pdfUrl, cache: true }}
+        style={styles.pdf}
         onLoadComplete={(numberOfPages, filePath) => {
-          console.log(`Número de páginas: ${numberOfPages}`);
+          //console.log(`Número de páginas: ${numberOfPages}`);
         }}
         onPageChanged={(page, numberOfPages) => {
-          console.log(`Página: ${page} de ${numberOfPages}`);
+          //console.log(`Página: ${page} de ${numberOfPages}`);
         }}
         onError={(error) => {
-          console.log(error);
+          //console.log(error);
         }}
         onPressLink={(uri) => {
-          console.log(`Link pressionado: ${uri}`);
+          //console.log(`Link pressionado: ${uri}`);
         }}
       />
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
