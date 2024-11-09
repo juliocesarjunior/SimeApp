@@ -3,7 +3,7 @@ import { View, Text, FlatList, StyleSheet, TextInput, Button, TouchableOpacity }
 import axios from 'axios';
 import { NavigationStackProp } from 'react-navigation-stack';
 
-const BASE_URL = 'http://10.86.46.56:3000'; // Definindo a base URL
+const BASE_URL = 'http://192.168.18.6:3000'; // Definindo a base URL
 
 interface Library {
   id: number;
@@ -40,7 +40,7 @@ const LibraryScreen: React.FC<Props> = ({ navigation }) => {
 
   const fetchLibraries = async (page: number) => {
     try {
-      const response = await axios.get(`http://10.86.46.56:3000/api/v1/libraries?page=${page}`);
+      const response = await axios.get(`http://192.168.18.6:3000/api/v1/libraries?page=${page}`);
       setLibraries(response.data.libraries);
       setFilteredLibraries(response.data.libraries);
       setTotalPages(response.data.meta.total_pages);

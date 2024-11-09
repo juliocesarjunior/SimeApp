@@ -20,7 +20,7 @@ const CallScreen: React.FC<Props> = ({ navigation }) => {
   const [items, setItems] = useState<Item[]>([]);
 
   useEffect(() => {
-    axios.get('http://10.86.46.56:3000/api/v1/phalanges') // Atualize a URL da API conforme necessário
+    axios.get('http://localhost:3000/api/v1/phalanges') // Atualize a URL da API conforme necessário
       .then(response => setItems(response.data)) // Supondo que a resposta já é um array
       .catch(error => console.log(error));
   }, []);

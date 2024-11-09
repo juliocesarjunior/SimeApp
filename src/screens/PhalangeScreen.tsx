@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import axios from 'axios';
 import { NavigationStackProp } from 'react-navigation-stack';
+import ApiRequest from '../service/ApiRequest';
 
 interface Item {
   id: number;
@@ -18,25 +19,30 @@ interface Props {
 }
 
 const PhalangeScreen: React.FC<Props> = ({ navigation }) => {
-  const [items, setItems] = useState<Item[]>([]);
+  const [phalanges, setPhalanges] = useState<Item[]>([]);
 
   useEffect(() => {
-    axios.get('http://10.86.46.56:3000/api/v1/phalanges') // Atualize a URL da API conforme necessário
-      .then(response => setItems(response.data)) // Supondo que a resposta já é um array
-      .catch(error => console.log(error));
+    // Usando ApiRequest para fazer a requisição
+    ApiRequest.getRequest('api/v1/phalanges', {}, (data, success) => {
+      if (success) {
+        setPhalanges(data);
+      } else {
+        console.log('Erro ao buscar categorias:', data);
+      }
+    });
   }, []);
 
-  const showName = (name: string) => {
-    Alert.alert('Nome Selecionado', name);
+  const navigateToDetails = (id: number) => {
+    navigation.navigate('PhalangeDetails', { id });
   };
 
   return (
     <View style={styles.container}>
     <FlatList
-      data={items}
+      data={phalanges}
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
-        <TouchableOpacity style={styles.item} onPress={() => showName(item.name)}>
+        <TouchableOpacity style={styles.item} onPress={() => navigateToDetails(item.id)}>
           <Text style={styles.itemText}>{item.name}</Text>
         </TouchableOpacity>
       )}

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Button, FlatList, StyleSheet, TouchableOpacity, Text, Image, Platform } from 'react-native';
-import axios from 'axios';
+import { View, Button, FlatList, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
 import { NavigationStackProp } from 'react-navigation-stack';
+import ApiRequest from '../service/ApiRequest';
+import { API_BASE_URL } from '../service/apiConfig';
 
 interface Category {
   id: string;
@@ -18,33 +19,38 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
-    axios.get('http://10.86.46.56:3000/api/v1/categories')
-      .then(response => setCategories(response.data.categories))
-      .catch(error => console.log(error));
+    // Usando ApiRequest para fazer a requisição
+    ApiRequest.getRequest('api/v1/categories', {}, (data, success) => {
+      if (success) {
+        setCategories(data.categories); // Atualiza o estado com os dados recebidos
+      } else {
+        console.log('Erro ao buscar categorias:', data);
+      }
+    });
   }, []);
 
   return (
     <View>
-              <FlatList
-          data={categories}
-          renderItem={({ item }) => (
-            <TouchableOpacity
+      <FlatList
+        data={categories}
+        renderItem={({ item }) => (
+          <TouchableOpacity
             onPress={() => navigation.navigate(item.route)}
-			style={styles.listMenu}
-            >
-              <Image
-                source={{ uri: `http://10.86.46.56:3000${item.image}` }}
-                style={styles.listImg}
-              />
-              <Text>{item.name}</Text>
-            </TouchableOpacity>
-          )}
-          numColumns={2}
-          columnWrapperStyle={{
-            justifyContent: "space-between",
-          }}
-          showsVerticalScrollIndicator={false}
-        />
+            style={styles.listMenu}
+          >
+            <Image
+              source={{ uri: `${API_BASE_URL}${item.image}` }}
+              style={styles.listImg}
+            />
+            <Text>{item.name}</Text>
+          </TouchableOpacity>
+        )}
+        numColumns={2}
+        columnWrapperStyle={{
+          justifyContent: "space-between",
+        }}
+        showsVerticalScrollIndicator={false}
+      />
       <FlatList
         data={categories}
         keyExtractor={(item) => item.id}
@@ -71,12 +77,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 20,
-},
-listImg:{ 
+  },
+  listImg: { 
     width: 150, 
     height: 150, 
     resizeMode: "center" 
-},
+  },
 });
 
 export default HomeScreen;
