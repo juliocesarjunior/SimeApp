@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TextInput, Button, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { NavigationStackProp } from 'react-navigation-stack';
+import { API_BASE_URL } from '../service/apiConfig';
 
 const BASE_URL = 'http://192.168.18.6:3000'; // Definindo a base URL
 
@@ -40,7 +41,7 @@ const LibraryScreen: React.FC<Props> = ({ navigation }) => {
 
   const fetchLibraries = async (page: number) => {
     try {
-      const response = await axios.get(`http://192.168.18.6:3000/api/v1/libraries?page=${page}`);
+      const response = await axios.get(`${API_BASE_URL}/api/v1/libraries?page=${page}`);
       setLibraries(response.data.libraries);
       setFilteredLibraries(response.data.libraries);
       setTotalPages(response.data.meta.total_pages);
