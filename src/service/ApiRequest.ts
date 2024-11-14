@@ -10,7 +10,7 @@ class ApiRequest {
   static async getRequest(path: string, params: Params, action: Action): Promise<void> {
     const requestParams = this.setParamsGetRequest(params);
     const fullUrl = `${this.url}/${path}${requestParams}`;
-
+    //console.log(fullUrl)
     try {
       const response: AxiosResponse = await axios.get(fullUrl);
       action(response.data, true); // Chama a função de ação com os dados e sucesso como true
