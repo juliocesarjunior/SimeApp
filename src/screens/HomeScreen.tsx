@@ -8,7 +8,9 @@ interface Category {
   id: string;
   name: string;
   route: string;
-  image: string;
+  file: {
+    url: string;
+  };
 }
 
 interface Props {
@@ -22,7 +24,8 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     // Usando ApiRequest para fazer a requisição
     ApiRequest.getRequest('api/v1/categories', {}, (data, success) => {
       if (success) {
-        setCategories(data.categories); // Atualiza o estado com os dados recebidos
+        console.log(data)
+        setCategories(data); // Atualiza o estado com os dados recebidos
       } else {
         console.log('Erro ao buscar categorias:', data);
       }
@@ -39,7 +42,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
             style={styles.listMenu}
           >
             <Image
-              source={{ uri: `${API_BASE_URL}${item.image}` }}
+              source={{ uri: `${API_BASE_URL}${item.file.url}` }}
               style={styles.listImg}
             />
             <Text>{item.name}</Text>
