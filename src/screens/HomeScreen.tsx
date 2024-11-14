@@ -19,21 +19,25 @@ interface Props {
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     // Usando ApiRequest para fazer a requisição
     ApiRequest.getRequest('api/v1/categories', {}, (data, success) => {
       if (success) {
-        console.log(data)
         setCategories(data); // Atualiza o estado com os dados recebidos
+        setErrorMessage(null); // Limpa a mensagem de erro, caso a requisição seja bem-sucedida
       } else {
         console.log('Erro ao buscar categorias:', data);
+        setErrorMessage(data.message || 'Erro ao buscar categorias.'); 
       }
     });
   }, []);
 
   return (
-    <View>
+    <View style={styles.container}>
+      {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
+      
       <FlatList
         data={categories}
         renderItem={({ item }) => (
@@ -53,22 +57,18 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
           justifyContent: "space-between",
         }}
         showsVerticalScrollIndicator={false}
-      />
-      <FlatList
-        data={categories}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <Button
-            title={item.name}
-            onPress={() => navigation.navigate(item.route)}
-          />
-        )}
       />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#f8f8f8',
+  },
   listMenu: {
     backgroundColor: '#fff',
     shadowColor: '#000',
@@ -85,6 +85,12 @@ const styles = StyleSheet.create({
     width: 150, 
     height: 150, 
     resizeMode: "center" 
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 16,
+    marginBottom: 16,
+    textAlign: 'center',
   },
 });
 
