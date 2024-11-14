@@ -1,11 +1,10 @@
 import React from 'react';
 import { View, Text, SafeAreaView, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation, NativeStackNavigationProp } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { API_BASE_URL } from '../service/apiConfig';
-import { theme } from '../theme'; // Certifique-se de importar o tema corretamente
 
 const InfoScreen: React.FC = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<StackPramslist>>();
+  const navigation = useNavigation();
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
