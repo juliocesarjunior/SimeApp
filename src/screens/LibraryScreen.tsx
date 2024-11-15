@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TextInput, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
+import { NavigationProp, ParamListBase } from '@react-navigation/native'; // Atualizado para usar `react-navigation`
 import ApiRequest from '../service/ApiRequest';
+import { API_BASE_URL } from '../service/apiConfig';
 
 interface Library {
   id: number;
@@ -14,7 +16,11 @@ interface Meta {
   total_pages: number;
 }
 
-const LibraryScreen: React.FC = () => {
+interface Props {
+  navigation: NavigationProp<ParamListBase>;
+}
+
+const LibraryScreen: React.FC<Props> = ({ navigation }) => {
   const [libraries, setLibraries] = useState<Library[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -24,11 +30,11 @@ const LibraryScreen: React.FC = () => {
   useEffect(() => {
     const loadLibraries = () => {
       setIsLoading(true);
-      
+
       const params = new URLSearchParams();
       params.append('q[name_or_description_cont]', searchQuery);
       params.append('page', currentPage.toString());
-  
+
       ApiRequest.getRequest(
         `api/v1/libraries?${params.toString()}`,
         {},
@@ -43,10 +49,10 @@ const LibraryScreen: React.FC = () => {
         }
       );
     };
-  
+
     loadLibraries();
   }, [searchQuery, currentPage]);
-  
+
   const handleSearchChange = (text: string) => {
     setSearchQuery(text);
     setCurrentPage(1); // Reset para a primeira página quando a busca muda
@@ -59,14 +65,18 @@ const LibraryScreen: React.FC = () => {
 
   const goToNextPage = () => {
     if (meta && currentPage < meta.total_pages) {
-      setCurrentPage(prevPage => prevPage + 1);
+      setCurrentPage((prevPage) => prevPage + 1);
     }
   };
 
   const goToPrevPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(prevPage => prevPage - 1);
+      setCurrentPage((prevPage) => prevPage - 1);
     }
+  };
+
+  const handleLibraryPress = (fileUrl: string) => {
+    navigation.navigate('PdfViewer', { pdfUrl: fileUrl }); // Navega para a tela de visualização de PDF
   };
 
   return (
@@ -91,10 +101,13 @@ const LibraryScreen: React.FC = () => {
           data={libraries}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <View style={styles.itemContainer}>
+            <TouchableOpacity
+              onPress={() => handleLibraryPress(`${API_BASE_URL}${item.file.url}`)} // Chamando a função ao clicar no item
+              style={styles.itemContainer}
+            >
               <Text style={styles.name}>{item.name}</Text>
               <Text style={styles.description}>{item.description}</Text>
-            </View>
+            </TouchableOpacity>
           )}
         />
       )}

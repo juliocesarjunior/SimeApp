@@ -1,4 +1,4 @@
 // apiConfig.ts
-const API_BASE_URL = 'http://192.168.18.6:3000';
+const API_BASE_URL = 'https://kalorpiaui.com.br';
 
 export { API_BASE_URL };
